@@ -2,3 +2,14 @@
 //
 // The variables you want to modify
 // $font-size-root: 20px;
+
+@import '~vuetify/src/styles/styles.sass';
+
+$primary: map-get($red, 'darken-2');
+$secondary: map-get($amber, 'darken-3');
+$info: map-get($teal, 'lighten-2');
+$warning: map-get($amber, 'base');
+$error: map-get($deep-orange, 'accent-4');
+$success: map-get($green, 'accent-3');
+
+$primary: map-get($red, 'darken-2');
