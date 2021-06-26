@@ -1,10 +1,17 @@
 <template>
   <div>
-    <MovieFeatured v-if="movieFeatured.id" :movie="movieFeatured" />
-    <v-container class="main-container">
-      <h2 class="text-h4">Filmes em Destaque</h2>
-      <MovieList :movies="moviesList.results" @changeMovie="selectMovie" />
-    </v-container>
+    <v-fade-transition>
+      <MovieFeatured
+        v-if="viewFeatured && movieFeatured.id"
+        :movie="movieFeatured"
+      />
+    </v-fade-transition>
+    <v-fade-transition>
+      <v-container :class="{ 'main-container': viewFeatured }">
+        <h2 class="text-h4">Filmes em Destaque</h2>
+        <MovieList :movies="moviesList.results" @changeMovie="selectMovie" />
+      </v-container>
+    </v-fade-transition>
   </div>
 </template>
 
@@ -23,7 +30,7 @@ export default class IndexPage extends Vue {
     })
   }
 
-  selectMovie(movie) {
+  selectMovie(movie: MovieModel) {
     this.movieFeatured = movie
   }
 
@@ -32,6 +39,20 @@ export default class IndexPage extends Vue {
       'movies/getMoviesList'
     ] as ResponseList<MovieModel>
   }
+
+  get hasSearchMovie(): boolean {
+    return this.$store.getters['movies/getHasSearchMovie'] as boolean
+  }
+
+  get searchQuery(): string {
+    return this.$store.getters['movies/getSearchQuery'] as string
+  }
+
+  get viewFeatured(): boolean {
+    return this.searchQuery?.length < 3
+  }
+
+  hasSearch = this.$store.getters['movies/getSearchQuery'] as boolean
 
   async fetchMoveis() {
     try {

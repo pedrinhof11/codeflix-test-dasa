@@ -22,7 +22,7 @@ export default class MovieList extends Vue {
   @Prop({}) readonly movies?: any
 
   changeMovie(item: any) {
-    this.$emit('changeMovie', this.movies[item])
+    item !== undefined && this.$emit('changeMovie', this.movies[item])
   }
 }
 </script>

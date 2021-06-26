@@ -24,11 +24,23 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer> -->
-    <v-app-bar dark :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-spacer />
-      <img src="/logo.png" alt="codeFlix" />
+      <img v-if="!hasSearchMovie" src="/logo.png" alt="codeFlix" />
       <v-spacer />
+      <v-fade-transition>
+        <v-text-field
+          v-if="hasSearchMovie"
+          v-model="search"
+          placeholder="Qual filme deseja buscar?"
+          hide-details
+          single-line
+        ></v-text-field>
+      </v-fade-transition>
+      <v-btn icon @click="handleToggleSearch">
+        <v-icon>{{ !hasSearchMovie ? 'mdi-magnify' : 'mdi-close' }}</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main>
       <nuxt />
@@ -37,12 +49,13 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+
 export default {
   data() {
     return {
       clipped: true,
       drawer: false,
-      fixed: false,
       items: [
         {
           icon: 'mdi-apps',
@@ -56,10 +69,35 @@ export default {
         },
       ],
       miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'CodeFlix',
     }
+  },
+
+  computed: {
+    ...mapGetters({
+      hasSearchMovie: 'movies/getHasSearchMovie',
+      searchQuery: 'movies/getSearchQuery',
+    }),
+
+    search: {
+      get() {
+        return this.searchQuery
+      },
+      set(value) {
+        this.setSearchQuery(value)
+      },
+    },
+  },
+  methods: {
+    ...mapMutations({
+      toggleSearch: 'movies/toggleSearchMovie',
+      setSearchQuery: 'movies/setSearchQuery',
+    }),
+    handleToggleSearch() {
+      this.toggleSearch()
+      if (!this.hasSearchMovie) {
+        this.search = ''
+      }
+    },
   },
 }
 </script>
