@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
@@ -23,8 +23,8 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    </v-navigation-drawer> -->
+    <v-app-bar dark :clipped-left="clipped" fixed app>
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-spacer />
       <img src="/logo.png" alt="codeFlix" />
@@ -33,9 +33,6 @@
     <v-main>
       <nuxt />
     </v-main>
-    <v-footer :absolute="!fixed" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
   </v-app>
 </template>
 
