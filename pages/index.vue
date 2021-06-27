@@ -10,6 +10,10 @@
       <v-container v-if="viewFeatured" class="main-container">
         <h2 class="text-h6 text-md-h4">Filmes em Destaque</h2>
         <MovieList :movies="moviesList.results" @changeMovie="selectMovie" />
+        <infinity-loader
+          :loading="loading"
+          @loadMore="loadMoreMovie"
+        ></infinity-loader>
       </v-container>
       <v-container v-else>
         <h2 class="text-h6 text-md-h4">Pesquisando por: {{ searchQuery }}</h2>
@@ -30,6 +34,7 @@ import { MovieModel, ResponseList } from '../types'
 export default class IndexPage extends Vue {
   page: number = 1
   movieFeatured = {}
+  loading = false
 
   mounted(): void {
     this.$nextTick(() => {
@@ -75,6 +80,20 @@ export default class IndexPage extends Vue {
       this.movieFeatured = this.moviesList.results?.[0] ?? {}
     } finally {
       this.$nuxt.$loading.finish()
+    }
+  }
+
+  async loadMoreMovie() {
+    if (this.page < (this.moviesList?.total_pages ?? 0)) {
+      try {
+        this.loading = true
+        const page = this.page + 1
+        await this.$store.dispatch('movies/fetchMovies', page)
+        this.page = this.moviesList?.page ?? 1
+        this.movieFeatured = this.moviesList.results?.[0] ?? {}
+      } finally {
+        this.loading = false
+      }
     }
   }
 }

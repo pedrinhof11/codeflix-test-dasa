@@ -27,6 +27,9 @@ export default class MoviesModule extends VuexModule implements MoviesState {
 
   @Mutation
   setMoviesList(movies: ResponseList<MovieModel>) {
+    if (movies.page > 1) {
+      movies.results = [...this.moviesList.results, ...movies.results]
+    }
     this.moviesList = movies
   }
 
@@ -71,7 +74,7 @@ export default class MoviesModule extends VuexModule implements MoviesState {
   }
 
   @Action
-  async fetchMovies({ page }: any) {
+  async fetchMovies(page: number) {
     const params = { api_key: API_KEY, language: 'pt-BR', page }
     const data = await $axios.$get('/movie/popular', { params })
     this.setMoviesList(data)
