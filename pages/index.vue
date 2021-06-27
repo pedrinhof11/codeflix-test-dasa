@@ -8,7 +8,8 @@
     </v-fade-transition>
     <v-fade-transition>
       <v-container :class="{ 'main-container': viewFeatured }">
-        <h2 class="text-h4">Filmes em Destaque</h2>
+        <h2 v-if="viewFeatured" class="text-h4">Filmes em Destaque</h2>
+        <h2 v-else class="text-h4">Pesquisando por: {{ searchQuery }}</h2>
         <MovieList :movies="moviesList.results" @changeMovie="selectMovie" />
       </v-container>
     </v-fade-transition>

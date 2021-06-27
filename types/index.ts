@@ -1,12 +1,21 @@
 /* eslint-disable camelcase */
+
+export interface Genre {
+  id: number
+  name?: string
+}
+
 export interface MovieModel {
   id?: number
   title?: string
   original_language?: string
   original_title?: string
+  homepage?: string
   adult?: boolean
   backdrop_path?: string
+  budget?: number
   genre_ids?: number[]
+  genres?: Genre[]
   overview?: string
   popularity?: number
   poster_path?: string
@@ -29,9 +38,4 @@ export class ResponseList<T> implements IResponseList<T> {
   results: T[] = []
   total_results?: number
   total_pages?: number
-}
-
-export interface MovieGenre {
-  id: number
-  name?: string
 }

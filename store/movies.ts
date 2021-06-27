@@ -67,9 +67,16 @@ export default class MoviesModule extends VuexModule implements MoviesState {
   }
 
   @Action
+  async getMovieDetails(id: number) {
+    const params = { api_key: API_KEY, language: 'pt-BR' }
+    const data = await $axios.$get(`/movie/${id}`, { params })
+    this.setMovie(data)
+  }
+
+  @Action
   async searchMovies(query: string) {
     const params = { api_key: API_KEY, language: 'pt-BR', query }
-    const data = await $axios.$get('search/movie', { params })
+    const data = await $axios.$get('/search/movie', { params })
     this.setMoviesList(data)
   }
 }

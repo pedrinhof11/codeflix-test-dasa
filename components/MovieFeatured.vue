@@ -8,7 +8,7 @@
     >
       <div class="fill-height">
         <v-container>
-          <div class="featured__box bottom-gradient">
+          <div class="featured__box">
             <h1 class="featured__title text-h2 text-lg-h1">
               {{ movie.title }}
             </h1>
@@ -29,7 +29,7 @@
                 </v-btn>
               </div>
               <div class="pl-4">
-                <v-btn x-large block>
+                <v-btn x-large block :to="`/movie/${movie.id}`">
                   <v-icon left x-large class="mr-5">
                     mdi-information-outline
                   </v-icon>
