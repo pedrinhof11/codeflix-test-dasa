@@ -8,7 +8,11 @@
         <h1>{{ movie.title }}</h1>
         <hr />
         <div class="mt-2 mb-4">
-          <v-chip v-for="genre in movie.genres" :key="genre.id" class="mr-2">
+          <v-chip
+            v-for="genre in movie.genres"
+            :key="genre.id"
+            class="mr-2 mb-2"
+          >
             {{ genre.name }}
           </v-chip>
         </div>
@@ -18,7 +22,7 @@
           <v-chip
             v-for="company in movie.production_companies"
             :key="company.id"
-            class="mr-2"
+            class="mr-2 mb-2"
           >
             {{ company.name }}
           </v-chip>
