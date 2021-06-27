@@ -1,8 +1,8 @@
 <template>
   <v-dialog v-model="openTrailer" persistent scrollable max-width="1200">
     <v-card>
-      <v-card-title class="title">
-        {{ trailerTitle }}
+      <v-card-title>
+        <span class="text-truncate text-body-1">{{ trailerTitle }}</span>
         <v-spacer></v-spacer>
         <v-btn color="primary" icon @click="closeTrailer">
           <v-icon
@@ -12,10 +12,10 @@
           ></v-icon>
         </v-btn>
       </v-card-title>
-      <v-responsive v-if="trailer" :aspect-ratio="16 / 9">
+      <v-responsive v-if="syncedTrailer" :aspect-ratio="16 / 9">
         <client-only>
           <youtube
-            :video-id="trailer.key"
+            :video-id="syncedTrailer.key"
             :player-vars="{ autoplay: 1 }"
             class="trailer"
             host="https://www.youtube-nocookie.com"
@@ -36,15 +36,16 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, PropSync } from 'nuxt-property-decorator'
+import { MovieModel } from '~/types'
 
 @Component
 export default class MovieTrailer extends Vue {
   @Prop({ type: Object }) readonly movie!: MovieModel
-  @PropSync('trailer', { type: Object }) readonly syncedTrailer!: any
-  @PropSync('open', { type: Boolean }) readonly openTrailer!: boolean
+  @PropSync('trailer', { type: Object }) syncedTrailer!: any
+  @PropSync('open', { type: Boolean }) openTrailer!: boolean
 
   get trailerTitle() {
-    return this.trailer?.name ?? this.movie.title
+    return this.syncedTrailer?.name ?? this.movie.title
   }
 
   onVideoEnd() {

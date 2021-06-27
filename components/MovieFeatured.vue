@@ -9,7 +9,9 @@
       <div class="fill-height">
         <v-container>
           <div class="featured__box">
-            <h1 class="featured__title text-h2 text-lg-h1">
+            <h1
+              class="featured__title text-h5 text-md-h3 text-lg-h2 text-xl-h1"
+            >
               {{ movie.title }}
             </h1>
             <p
@@ -25,23 +27,25 @@
               <div>
                 <v-btn
                   class="featured__actions__btn"
-                  x-large
-                  block
+                  :x-large="!isBreakpointXs"
+                  :large="isBreakpointXs"
+                  :block="!isBreakpointXs"
                   color="white black--text"
                   @click="handleOpenTrailer"
                 >
-                  <v-icon left x-large class="mr-5"> mdi-play </v-icon> Assistir
-                  Trailer
+                  <v-icon left x-large class="mr-0 mr-sm-4"> mdi-play </v-icon>
+                  <span class="d-none d-md-block">Assistir Trailer</span>
                 </v-btn>
               </div>
               <div class="pl-4">
                 <v-btn
                   class="featured__actions__btn--dark"
-                  x-large
-                  block
+                  :x-large="!isBreakpointXs"
+                  :large="isBreakpointXs"
+                  :block="!isBreakpointXs"
                   :to="`/movie/${movie.id}`"
                 >
-                  <v-icon left x-large class="mr-5">
+                  <v-icon left x-large class="mr-4">
                     mdi-information-outline
                   </v-icon>
                   Mais Informações
@@ -94,6 +98,10 @@ export default class MovieFeatured extends Vue {
       this.$nuxt.$loading.finish()
     }
   }
+
+  get isBreakpointXs() {
+    return this.$vuetify.breakpoint.name === 'xs'
+  }
 }
 </script>
 
@@ -103,13 +111,17 @@ export default class MovieFeatured extends Vue {
     position: absolute;
     top: 0;
     bottom: 10%;
-    width: 40%;
+    width: 100%;
     z-index: 10;
     display: flex;
     justify-content: flex-end;
     flex-direction: column;
+    @media only screen and (min-width: 960px) {
+      width: 60%;
+    }
     @media only screen and (min-width: 1264px) {
       bottom: 30%;
+      width: 40%;
     }
   }
   &__title {
@@ -128,7 +140,9 @@ export default class MovieFeatured extends Vue {
     padding-top: 12px;
 
     div {
-      width: 100%;
+      @media only screen and (min-width: 1264px) {
+        width: 100%;
+      }
     }
 
     &__btn {
