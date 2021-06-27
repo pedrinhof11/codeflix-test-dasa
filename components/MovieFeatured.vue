@@ -23,13 +23,24 @@
             </p>
             <div class="featured__actions">
               <div>
-                <v-btn x-large block color="white black--text">
+                <v-btn
+                  class="featured__actions__btn"
+                  x-large
+                  block
+                  color="white black--text"
+                  @click="handleOpenTrailer"
+                >
                   <v-icon left x-large class="mr-5"> mdi-play </v-icon> Assistir
-                  Trailler
+                  Trailer
                 </v-btn>
               </div>
               <div class="pl-4">
-                <v-btn x-large block :to="`/movie/${movie.id}`">
+                <v-btn
+                  class="featured__actions__btn--dark"
+                  x-large
+                  block
+                  :to="`/movie/${movie.id}`"
+                >
                   <v-icon left x-large class="mr-5">
                     mdi-information-outline
                   </v-icon>
@@ -41,6 +52,11 @@
         </v-container>
       </div>
     </v-img>
+    <movie-trailer
+      :movie="movie"
+      :open.sync="openTrailer"
+      :trailer.sync="trailer"
+    ></movie-trailer>
   </div>
 </template>
 
@@ -52,12 +68,31 @@ import { MovieModel } from '~/types'
 export default class MovieFeatured extends Vue {
   @Prop({ type: Object }) readonly movie!: MovieModel
 
+  openTrailer = false
+  trailer: any = null
+
   get imgCover() {
     return `https://image.tmdb.org/t/p/original${this.movie.backdrop_path}`
   }
 
   get lazyImgCover() {
     return `https://image.tmdb.org/t/p/w500${this.movie.backdrop_path}`
+  }
+
+  async handleOpenTrailer() {
+    this.openTrailer = true
+    try {
+      this.$nuxt.$loading.start()
+      const { results } = await this.$store.dispatch(
+        'movies/getTrailers',
+        this.movie.id
+      )
+      if (results) {
+        this.trailer = results[0]
+      }
+    } finally {
+      this.$nuxt.$loading.finish()
+    }
   }
 }
 </script>
@@ -94,6 +129,14 @@ export default class MovieFeatured extends Vue {
 
     div {
       width: 100%;
+    }
+
+    &__btn {
+      background-color: transparentize($white, 0.4) !important;
+    }
+
+    &__btn--dark {
+      background-color: transparentize($dark, 0.4) !important;
     }
   }
 }

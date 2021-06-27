@@ -7,6 +7,7 @@ const API_KEY = '70e74297fa3faa8f28a4f8b10dbdad89'
 
 interface MoviesState {
   moviesList: ResponseList<MovieModel>
+  searchMoviesList: ResponseList<MovieModel>
   movie: MovieModel
   hasSearchMovie: boolean
   searchQuery: string
@@ -19,6 +20,7 @@ interface MoviesState {
 })
 export default class MoviesModule extends VuexModule implements MoviesState {
   moviesList: ResponseList<MovieModel> = new ResponseList()
+  searchMoviesList: ResponseList<MovieModel> = new ResponseList()
   movie: MovieModel = {}
   hasSearchMovie = false
   searchQuery = ''
@@ -26,6 +28,11 @@ export default class MoviesModule extends VuexModule implements MoviesState {
   @Mutation
   setMoviesList(movies: ResponseList<MovieModel>) {
     this.moviesList = movies
+  }
+
+  @Mutation
+  setSearchMoviesList(movies: ResponseList<MovieModel>) {
+    this.searchMoviesList = movies
   }
 
   @Mutation
@@ -41,6 +48,10 @@ export default class MoviesModule extends VuexModule implements MoviesState {
   @Mutation
   setSearchQuery(searchQuery: string) {
     this.searchQuery = searchQuery
+  }
+
+  get getSearchMoviesList() {
+    return this.searchMoviesList
   }
 
   get getMoviesList() {
@@ -77,6 +88,13 @@ export default class MoviesModule extends VuexModule implements MoviesState {
   async searchMovies(query: string) {
     const params = { api_key: API_KEY, language: 'pt-BR', query }
     const data = await $axios.$get('/search/movie', { params })
-    this.setMoviesList(data)
+    this.setSearchMoviesList(data)
+  }
+
+  @Action
+  async getTrailers(id: number) {
+    const params = { api_key: API_KEY, language: 'pt-BR' }
+    const data = await $axios.$get(`/movie/${id}/videos`, { params })
+    return data
   }
 }

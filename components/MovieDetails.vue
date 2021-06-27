@@ -16,9 +16,10 @@
             {{ genre.name }}
           </v-chip>
         </div>
-        <p>{{ movie.overview }}</p>
-        <h3 class="subtitle">Produzido por:</h3>
-        <div class="mt-1">
+        <h3 class="subtitle">Sinopse</h3>
+        <p class="mt-2">{{ movie.overview }}</p>
+        <h3 class="subtitle">Produzido por</h3>
+        <div class="mt-2">
           <v-chip
             v-for="company in movie.production_companies"
             :key="company.id"

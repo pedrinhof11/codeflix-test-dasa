@@ -14,6 +14,8 @@
           placeholder="Qual filme deseja buscar?"
           hide-details
           single-line
+          :loading="loading"
+          @input="searchMovies"
         ></v-text-field>
       </v-fade-transition>
       <v-btn icon @click="handleToggleSearch">
@@ -26,59 +28,50 @@
   </v-app>
 </template>
 
-<script>
-import { mapGetters, mapMutations } from 'vuex'
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator'
+import debounce from 'lodash.debounce'
 
-export default {
-  data() {
-    return {
-      clipped: true,
-      drawer: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
-        },
-      ],
-      miniVariant: false,
+@Component
+export default class DefaultLayout extends Vue {
+  loading = false
+  get hasSearchMovie(): boolean {
+    return this.$store.getters['movies/getHasSearchMovie'] as boolean
+  }
+
+  get search(): string {
+    return this.$store.getters['movies/getSearchQuery'] as string
+  }
+
+  set search(value) {
+    this.setSearchQuery(value)
+  }
+
+  setSearchQuery(value: string) {
+    this.$store.commit('movies/setSearchQuery', value)
+  }
+
+  toggleSearch() {
+    this.$store.commit('movies/toggleSearchMovie')
+  }
+
+  handleToggleSearch() {
+    this.toggleSearch()
+    if (!this.hasSearchMovie) {
+      this.search = ''
     }
-  },
+    if (this.$route.name !== 'index') {
+      this.$router.push('/')
+    }
+  }
 
-  computed: {
-    ...mapGetters({
-      hasSearchMovie: 'movies/getHasSearchMovie',
-      searchQuery: 'movies/getSearchQuery',
-    }),
-
-    search: {
-      get() {
-        return this.searchQuery
-      },
-      set(value) {
-        this.setSearchQuery(value)
-      },
-    },
-  },
-  methods: {
-    ...mapMutations({
-      toggleSearch: 'movies/toggleSearchMovie',
-      setSearchQuery: 'movies/setSearchQuery',
-    }),
-    handleToggleSearch() {
-      this.toggleSearch()
-      if (!this.hasSearchMovie) {
-        this.search = ''
-      }
-      if (this.$route.name !== 'index') {
-        this.$router.push('index')
-      }
-    },
-  },
+  searchMovies = debounce(() => {
+    if (this.search.length >= 3) {
+      this.loading = true
+      this.$store.dispatch('movies/searchMovies', this.search).then(() => {
+        this.loading = false
+      })
+    }
+  }, 500)
 }
 </script>

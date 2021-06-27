@@ -7,10 +7,16 @@
       />
     </v-fade-transition>
     <v-fade-transition>
-      <v-container :class="{ 'main-container': viewFeatured }">
-        <h2 v-if="viewFeatured" class="text-h4">Filmes em Destaque</h2>
-        <h2 v-else class="text-h4">Pesquisando por: {{ searchQuery }}</h2>
+      <v-container v-if="viewFeatured" class="main-container">
+        <h2 class="text-h4">Filmes em Destaque</h2>
         <MovieList :movies="moviesList.results" @changeMovie="selectMovie" />
+      </v-container>
+      <v-container v-else>
+        <h2 class="text-h4">Pesquisando por: {{ searchQuery }}</h2>
+        <MovieList
+          :movies="searchMoviesList.results"
+          @changeMovie="selectMovie"
+        />
       </v-container>
     </v-fade-transition>
   </div>
@@ -38,6 +44,12 @@ export default class IndexPage extends Vue {
   get moviesList(): ResponseList<MovieModel> {
     return this.$store.getters[
       'movies/getMoviesList'
+    ] as ResponseList<MovieModel>
+  }
+
+  get searchMoviesList(): ResponseList<MovieModel> {
+    return this.$store.getters[
+      'movies/getSearchMoviesList'
     ] as ResponseList<MovieModel>
   }
 
@@ -71,7 +83,7 @@ export default class IndexPage extends Vue {
 <style lang="scss" scoped>
 .main-container {
   position: relative;
-  z-index: 10;
+  z-index: 2;
 
   @media only screen and (min-width: 1264px) {
     margin-top: -200px;
