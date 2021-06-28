@@ -2,6 +2,9 @@
 
 Repositório para teste de seleção na Dasa
 
+## Link do site
+https://60d9d2332a97bc07b1f57672--sad-mestorf-f7a015.netlify.app/
+
 ## Projeto 
 Consistem em um catálogo de filmes onde o usuário pode listar, buscar e visualizar detalhes dos filmes, e também assistir ‘trailers’
 
